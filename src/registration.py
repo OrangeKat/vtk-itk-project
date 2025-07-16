@@ -39,6 +39,8 @@ class ImageRegistration:
         
         print(f"Fixed image size: {itk.size(self.fixed_image)}")
         print(f"Moving image size: {itk.size(self.moving_image)}")
+        print(f"Can take 2/10 mins depending on the computer use")
+
         
     def rigid_registration(self):
         """
