@@ -167,6 +167,50 @@ class ImageRegistration:
         except Exception as e:
             print(f"Affine registration failed: {e}")
             return False
+        
+    def translation_registration(self):
+        dimension = 3
+        FixedImageType = type(self.fixed_image)
+        MovingImageType = type(self.moving_image)
+
+        TransformType = itk.TranslationTransform[itk.D, dimension]
+        initialTransform = TransformType.New()
+
+        optimizer = itk.RegularStepGradientDescentOptimizerv4.New()
+
+        optimizer.SetLearningRate(1)
+        optimizer.SetMinimumStepLength(1e-6)
+        optimizer.SetNumberOfIterations(100)
+
+        metric = itk.MeanSquaresImageToImageMetricv4[FixedImageType, MovingImageType].New()
+        fixed_interpolation = itk.LinearInterpolateImageFunction[FixedImageType, itk.D].New()
+        metric.SetFixedInterpolator(fixed_interpolation)
+
+        registration = itk.ImageRegistrationMethodv4[FixedImageType, MovingImageType].New(FixedImage=self.fixed_image, MovingImage=self.moving_image, Metric=metric,
+                                                                                    Optimizer=optimizer, InitialTransform=initialTransform)
+
+        moving_initial_transform = TransformType.New()
+        initial_parameters = moving_initial_transform.GetParameters()
+        initial_parameters[0] = 0
+        initial_parameters[1] = 0
+        moving_initial_transform.SetParameters(initial_parameters)
+        registration.SetMovingInitialTransform(moving_initial_transform)
+
+        identity_transform = TransformType.New()
+        identity_transform.SetIdentity()
+        registration.SetFixedInitialTransform(identity_transform)
+
+        registration.SetNumberOfLevels(1)
+
+        try:
+            registration.Update()
+            self.transform = registration.GetTransform()
+            print("Affine registration completed successfully!")
+            return True
+        except Exception as e:
+            print(f"Affine registration failed: {e}")
+            return False
+
     
     def bspline_registration(self):
         """

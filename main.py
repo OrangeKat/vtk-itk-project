@@ -10,11 +10,11 @@ def main():
 
     registration = ImageRegistration(fixed_image_path, moving_image_path)
     registered_image = None
-    
+
     registration.load_images()
-    if registration.rigid_registration():
-        registered_image = registration.apply_transform()
-    
+    if registration.translation_registration():
+        registered_image = registration.apply_transform("translation.nrrd")
+
     print("\nRegistration completed! Check the output files for results.")
 
     # Step 2: Segment
