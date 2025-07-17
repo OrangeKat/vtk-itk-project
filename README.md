@@ -1,9 +1,13 @@
 # Project VTK-ITK
 
 ## Dependencies
-- VTK
-- ITK
-- Numpy
+- itk>=5.3.0
+- vtk>=9.2.0
+- numpy>=1.21.0
+- matplotlib>=3.5.0
+- scipy>=1.7.0
+- nbformat>=5.0.0
+- nbconvert>=6.0.0
 
 ## How to run
 
