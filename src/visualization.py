@@ -187,7 +187,6 @@ def create_comparison_plots(seg1, seg2, orig1, reg, volume_metrics, intensity_me
     create_image_grid(orig_array, reg_array, mask1, mask2, slice_index, volume_metrics, intensity_metrics, spatial_metrics)
 
 def create_image_grid(orig_array, reg_array, mask1, mask2, slice_index, volume_metrics, intensity_metrics, spatial_metrics):
-    
     main_renderer = vtk.vtkRenderer()
     main_window = vtk.vtkRenderWindow()
     main_window.AddRenderer(main_renderer)
@@ -198,14 +197,14 @@ def create_image_grid(orig_array, reg_array, mask1, mask2, slice_index, volume_m
     interactor.SetRenderWindow(main_window)
     
     viewports = [
-        [0.0, 0.5, 0.25, 1.0], 
-        [0.25, 0.5, 0.5, 1.0], 
-        [0.5, 0.5, 0.75, 1.0], 
-        [0.75, 0.5, 1.0, 1.0], 
-        [0.0, 0.0, 0.25, 0.5], 
-        [0.25, 0.0, 0.5, 0.5], 
-        [0.5, 0.0, 0.75, 0.5], 
-        [0.75, 0.0, 1.0, 0.5]  
+        [0.0, 0.5, 0.25, 1.0],  
+        [0.25, 0.5, 0.5, 1.0],    
+        [0.5, 0.5, 0.75, 1.0],  
+        [0.75, 0.5, 1.0, 1.0],  
+        [0.0, 0.0, 0.25, 0.5],  
+        [0.25, 0.0, 0.5, 0.5],  
+        [0.5, 0.0, 0.75, 0.5],  
+        [0.75, 0.0, 1.0, 0.5]   
     ]
     
     titles = [
@@ -252,14 +251,48 @@ def create_image_grid(orig_array, reg_array, mask1, mask2, slice_index, volume_m
     
     create_summary_text(renderers[7], volume_metrics, intensity_metrics, spatial_metrics)
     
+    for renderer in renderers:
+        camera = renderer.GetActiveCamera()
+        camera.SetPosition(0, 0, 1)
+        camera.SetFocalPoint(0, 0, 0)
+        camera.SetViewUp(0, 1, 0)
+        camera.ParallelProjectionOn()
+        renderer.ResetCamera()
+        renderer.InteractiveOff()
+    
     main_window.Render()
+    
+    interactor.SetInteractorStyle(None)
+    
+    class NoInteractionStyle(vtk.vtkInteractorStyle):
+        def __init__(self):
+            self.AddObserver("LeftButtonPressEvent", self.do_nothing)
+            self.AddObserver("RightButtonPressEvent", self.do_nothing)
+            self.AddObserver("MiddleButtonPressEvent", self.do_nothing)
+            self.AddObserver("MouseMoveEvent", self.do_nothing)
+            self.AddObserver("MouseWheelForwardEvent", self.do_nothing)
+            self.AddObserver("MouseWheelBackwardEvent", self.do_nothing)
+            self.AddObserver("KeyPressEvent", self.handle_key)
+        
+        def do_nothing(self, obj, event):
+            pass
+        
+        def handle_key(self, obj, event):
+            key = obj.GetKeySym()
+            if key == 'q' or key == 'Escape':
+                obj.GetRenderWindow().Finalize()
+                obj.TerminateApp()
+    
+    no_interaction = NoInteractionStyle()
+    interactor.SetInteractorStyle(no_interaction)
+    
     interactor.Start()
 
 def create_image_slice(renderer, image_data, grayscale=True, colormap=False):
     
     if len(image_data.shape) == 3: 
         image_flipped = image_data
-    else: 
+    else:  
         image_flipped = np.flipud(image_data)
     
     if grayscale and len(image_flipped.shape) == 2:
@@ -340,7 +373,7 @@ def create_volume_bar_chart(renderer, volume_metrics):
     
     bg_actor = vtk.vtkActor()
     bg_actor.SetMapper(bg_mapper)
-    bg_actor.GetProperty().SetColor(1.0, 1.0, 1.0) 
+    bg_actor.GetProperty().SetColor(1.0, 1.0, 1.0)  
     
     renderer.AddActor(bg_actor)
     
@@ -394,7 +427,7 @@ def create_volume_bar_chart(renderer, volume_metrics):
         value_actor.SetMapper(value_mapper)
         value_actor.SetPosition(x_pos - 0.05, bar_height + 0.05, 0.02)
         value_actor.SetScale(0.03, 0.03, 0.03)
-        value_actor.GetProperty().SetColor(0.0, 0.0, 0.0) 
+        value_actor.GetProperty().SetColor(0.0, 0.0, 0.0)
         
         renderer.AddActor(value_actor)
     
@@ -408,7 +441,7 @@ def create_volume_bar_chart(renderer, volume_metrics):
     change_actor.SetMapper(change_mapper)
     change_actor.SetPosition(-0.15, 0.7, 0.02)
     change_actor.SetScale(0.04, 0.04, 0.04)
-    change_actor.GetProperty().SetColor(0.0, 0.0, 0.0) 
+    change_actor.GetProperty().SetColor(0.0, 0.0, 0.0)
     
     renderer.AddActor(change_actor)
     
@@ -517,7 +550,7 @@ def numpy_to_vtk_image(numpy_array):
         h, w, c = numpy_array.shape
         vtk_data = numpy_support.numpy_to_vtk(numpy_array.ravel(), deep=True, array_type=vtk.VTK_UNSIGNED_CHAR)
         vtk_data.SetNumberOfComponents(c)
-    else:
+    else:  
         h, w = numpy_array.shape
         vtk_data = numpy_support.numpy_to_vtk(numpy_array.ravel(), deep=True, array_type=vtk.VTK_UNSIGNED_CHAR)
         vtk_data.SetNumberOfComponents(1)
