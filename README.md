@@ -1,5 +1,11 @@
 # Project VTK-ITK
 
+## Auteurs
+- Gabriel Cellier
+- Thomas POLO
+- Leopold TRAN
+
+
 ## Dependencies
 - itk>=5.3.0
 - vtk>=9.2.0
