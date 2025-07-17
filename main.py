@@ -28,7 +28,7 @@ if missing:
             print(f"Installing {pkg}...")
             subprocess.check_call([sys.executable, "-m", "pip", "install", pkg])
     else:
-        print("Fail")
+        print("")
         sys.exit(1)
 
 from src.registration import ImageRegistration
