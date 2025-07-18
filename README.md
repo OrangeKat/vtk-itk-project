@@ -54,29 +54,29 @@ Format NRRD : Compatible avec ITK, permet l'analyse 3D complète
 J'ai fait un recalage parce que :
 
 Mouvement du patient : Entre les deux scans, le patient a bougé légèrement
-Comparaison précise : Sans recalage, on ne peut pas comparer pixel par pixel
+Comparaison précise : Sans recalage, on ne peut pas comparé pixel par pixel
 Algorithme de translation : J'ai utilisé une translation simple car les images étaient déjà bien alignées
 Validation : Le déplacement de seulement 3.32mm montre que le recalage a bien marché
 
 3. Segmentations (masques blancs)
-Les petites zones blanches dans mes résultats représentent uniquement les tumeurs parce que :
+Les petites zones blanches dans mes résultats représentent les tumeurs parce que :
 
-Seuillage connecté : J'ai utilisé des seuils [500-800] pour isoler les tissus tumoraux hyperintenses
+Seuillage connecté : J'ai utilisés des seuils [500-800] pour isoler les tissus tumoraux hyperintenses
 Point de départ : Le seed point (90,70,51) était placé manuellement dans la tumeur
 Résultat propre : Contrairement à une segmentation globale, ça évite de prendre tout le cerveau
-Validation visuelle : Les masques correspondent bien aux zones tumorales visibles sur les images originales
+Validation visuelle : Les masque correspondent bien aux zones tumorales visibles sur les images originales
 
 4. Visualisation comparative 2D
-J'ai créé cette vue avec 8 panneaux pour montrer :
+J'ai créé cette vue avec 8 panneau pour montrer :
 
-Images originales : Pour voir les données de départ
+Images originales : Pour voir les donnée de départ
 Overlays colorés : Rouge pour T1, bleu pour T2, pour voir les différences de forme
-Carte de différence : Les zones rouges/bleues montrent où l'intensité a changé
+Carte de différence : Les zones rouges/bleues montre où l'intensité a changé
 Graphique de volume : Visualisation simple du changement (+6.2%)
-Résumé des métriques : Toutes les mesures importantes dans un coin
+Résumé des métriques : Toutes les mesures importante dans un coin
 
 6. Métriques calculées
 Volume (+6.2%) : Simple à comprendre, utilisé en clinique pour suivre l'évolution
 Intensité (-4.4%) : Peut indiquer une réponse au traitement ou un changement de nature tumorale
-Déplacement (3.32mm) : Faible = bon recalage, sinon ça indiquerait un problème technique
-Recouvrement (72%) : Mesure la similarité spatiale, 72% c'est bien pour des tumeurs qui évoluent
+Déplacement (3.32mm) : Faible = bon recalage, sinon sa indiquerait un problème technique
+Recouvrement (72%) : Mesure la similarité spatiale, 72% c'est bien pour des tumeur qui évoluent
